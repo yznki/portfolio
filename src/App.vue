@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import HomeView from "./views/HomeView.vue"
+</script>
 
 <template>
-  <div></div>
+  <div class="flex h-screen w-screen flex-col bg-background">
+    <HomeView />
+  </div>
 </template>
