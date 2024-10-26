@@ -4,6 +4,6 @@ const props = defineProps<{ title: string }>()
 
 <template>
   <div class="flex pt-6">
-    <p class="font-bold uppercase">{{ title }}</p>
+    <p class="text-lg font-bold uppercase">{{ title }}</p>
   </div>
 </template>
