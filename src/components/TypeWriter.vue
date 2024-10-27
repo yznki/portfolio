@@ -1,49 +1,49 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
+  import { ref, onMounted } from "vue"
 
-const typeValue = ref("")
-const typeStatus = ref(false)
-const typeArray = ["Software Engineer", "UI/UX Designer", "Graphic Designer"]
-const typingSpeed = 100
-const erasingSpeed = 75
-const newTextDelay = 1500
-const typeArrayIndex = ref(0)
-const charIndex = ref(0)
+  const typeValue = ref("")
+  const typeStatus = ref(false)
+  const typeArray = ["Software Engineer", "UI/UX Designer", "Graphic Designer"]
+  const typingSpeed = 100
+  const erasingSpeed = 75
+  const newTextDelay = 1500
+  const typeArrayIndex = ref(0)
+  const charIndex = ref(0)
 
-const typeText = () => {
-  if (charIndex.value < typeArray[typeArrayIndex.value].length) {
-    if (!typeStatus.value) typeStatus.value = true
+  const typeText = () => {
+    if (charIndex.value < typeArray[typeArrayIndex.value].length) {
+      if (!typeStatus.value) typeStatus.value = true
 
-    typeValue.value += typeArray[typeArrayIndex.value].charAt(charIndex.value)
-    charIndex.value += 1
+      typeValue.value += typeArray[typeArrayIndex.value].charAt(charIndex.value)
+      charIndex.value += 1
 
-    setTimeout(typeText, typingSpeed)
-  } else {
-    typeStatus.value = false
-    setTimeout(eraseText, newTextDelay)
+      setTimeout(typeText, typingSpeed)
+    } else {
+      typeStatus.value = false
+      setTimeout(eraseText, newTextDelay)
+    }
   }
-}
 
-const eraseText = () => {
-  if (charIndex.value > 0) {
-    if (!typeStatus.value) typeStatus.value = true
+  const eraseText = () => {
+    if (charIndex.value > 0) {
+      if (!typeStatus.value) typeStatus.value = true
 
-    typeValue.value = typeArray[typeArrayIndex.value].substring(0, charIndex.value - 1)
-    charIndex.value -= 1
+      typeValue.value = typeArray[typeArrayIndex.value].substring(0, charIndex.value - 1)
+      charIndex.value -= 1
 
-    setTimeout(eraseText, erasingSpeed)
-  } else {
-    typeStatus.value = false
-    typeArrayIndex.value += 1
-    if (typeArrayIndex.value >= typeArray.length) typeArrayIndex.value = 0
+      setTimeout(eraseText, erasingSpeed)
+    } else {
+      typeStatus.value = false
+      typeArrayIndex.value += 1
+      if (typeArrayIndex.value >= typeArray.length) typeArrayIndex.value = 0
 
-    setTimeout(typeText, typingSpeed + 1000)
+      setTimeout(typeText, typingSpeed + 1000)
+    }
   }
-}
 
-onMounted(() => {
-  setTimeout(typeText, newTextDelay + 200)
-})
+  onMounted(() => {
+    setTimeout(typeText, newTextDelay + 200)
+  })
 </script>
 
 <template>
@@ -52,18 +52,18 @@ onMounted(() => {
 </template>
 
 <style scoped>
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
+  @keyframes blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    51%,
+    100% {
+      opacity: 0;
+    }
   }
-  51%,
-  100% {
-    opacity: 0;
-  }
-}
 
-.animate-blink {
-  animation: blink 1s infinite;
-}
+  .animate-blink {
+    animation: blink 1s infinite;
+  }
 </style>
