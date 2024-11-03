@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <div id="Experience" class="px-16 md:px-24 lg:px-52">
+  <div id="Experience" class="px-16 md:px-32 lg:px-64">
     <SectionHeading bg-color="black" title="Projects" />
     <div class="grid grid-cols-1 md:grid-cols-3">
       <ProjectCard logo-src="/SehatyLogo.svg" project-image="/SehatyProject.png" project-url="/sehaty" />

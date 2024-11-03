@@ -1,16 +1,19 @@
 <script setup lang="ts">
-  import { ref, onMounted } from "vue"
+  import { ref, onMounted, onUnmounted } from "vue"
 
   const typeValue = ref("")
   const typeStatus = ref(false)
   const typeArray = ["Software Engineer", "UI/UX Designer", "Graphic Designer"]
-  const typingSpeed = 100
-  const erasingSpeed = 75
-  const newTextDelay = 1500
+  const typingSpeed = 150
+  const erasingSpeed = 100
+  const newTextDelay = 1250
   const typeArrayIndex = ref(0)
   const charIndex = ref(0)
+  const isTypingEnabled = ref(false) // Start with false to rely on observer
 
   const typeText = () => {
+    if (!isTypingEnabled.value) return // Stop typing if not in view
+
     if (charIndex.value < typeArray[typeArrayIndex.value].length) {
       if (!typeStatus.value) typeStatus.value = true
 
@@ -25,6 +28,8 @@
   }
 
   const eraseText = () => {
+    if (!isTypingEnabled.value) return // Stop erasing if not in view
+
     if (charIndex.value > 0) {
       if (!typeStatus.value) typeStatus.value = true
 
@@ -41,13 +46,50 @@
     }
   }
 
+  const startTyping = () => {
+    if (!isTypingEnabled.value) {
+      isTypingEnabled.value = true
+      typeText() // Start typing when in view
+    }
+  }
+
+  const stopTyping = () => {
+    isTypingEnabled.value = false
+  }
+
+  let observer: IntersectionObserver | null = null
+
   onMounted(() => {
-    setTimeout(typeText, newTextDelay + 200)
+    // Set up the Intersection Observer
+    observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            startTyping()
+          } else {
+            stopTyping()
+          }
+        })
+      },
+      { threshold: 0.1 }, // Adjust threshold as needed
+    )
+
+    // Observe the element
+    const element = document.querySelector("#typewriter")
+    if (element) observer.observe(element)
+
+    // Trigger typing immediately on mount in case the element is already in view
+    startTyping()
+  })
+
+  onUnmounted(() => {
+    // Clean up the observer
+    if (observer) observer.disconnect()
   })
 </script>
 
 <template>
-  <span class="font-bold text-primary-500">{{ typeValue }}</span>
+  <span id="typewriter" class="font-bold text-primary-500">{{ typeValue }}</span>
   <span class="ml-1 inline-block w-[2px] bg-primary-500" :class="{ 'animate-blink': !typeStatus }">&nbsp;</span>
 </template>
 

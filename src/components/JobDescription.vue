@@ -27,8 +27,8 @@
 
 <template>
   <div class="flex flex-col items-start justify-center">
-    <p v-if="companyName" class="text-3xl font-bold">{{ companyName }}</p>
-    <p class="text-lg">
+    <p v-if="companyName" class="text-xl font-bold md:text-3xl">{{ companyName }}</p>
+    <p class="md:text-lg">
       <span class="text-primary-500">{{ jobTitle }}</span> | {{ startDate }} - {{ endDate ?? "Present" }}
     </p>
     <p class="text-justify text-[#707070]"><slot /></p>

@@ -15,8 +15,8 @@
 </script>
 
 <template>
-  <div class="flex w-full items-start gap-4">
-    <div class="flex min-h-24 min-w-40 max-w-40 items-center justify-center">
+  <div class="flex w-full flex-col items-start gap-4 md:flex-row">
+    <div class="flex min-h-12 min-w-40 max-w-40 items-center justify-center md:min-h-24">
       <img :src="imageSrc" :alt="imageAlt" class="object-contain" />
     </div>
     <div class="flex flex-col gap-2">
