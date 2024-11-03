@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import ExperiencesSection from "./views/ExperiencesSection.vue"
-  import HeroSection from "./views/HeroSection.vue"
-
   import { ref, onMounted } from "vue"
+  import HeroSection from "./sections/HeroSection.vue"
+  import ExperiencesSection from "./sections/ExperiencesSection.vue"
+  import ProjectsSection from "./sections/ProjectsSection.vue"
 
   const isLoaded = ref(false)
 
@@ -16,6 +16,7 @@
     <div class="h-full opacity-0 transition-all duration-[1000ms] ease-linear" :class="{ 'opacity-100': isLoaded }">
       <HeroSection />
       <ExperiencesSection />
+      <ProjectsSection />
     </div>
   </div>
 </template>

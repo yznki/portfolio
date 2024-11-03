@@ -14,7 +14,7 @@
 </script>
 
 <template>
-  <main class="h-screen w-screen bg-custom-gradient px-16 pt-12 md:px-24 lg:px-48">
+  <main class="h-screen w-screen bg-custom-gradient px-16 pt-12 md:px-24 lg:px-52">
     <div class="flex h-full w-full flex-col justify-between">
       <img src="/YLogo.svg" alt="Yazan's Logo" class="w-6 text-white" />
       <div class="flex w-full items-center justify-between">

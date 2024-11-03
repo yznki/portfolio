@@ -11,7 +11,7 @@
 </script>
 
 <template>
-  <div id="Experience" class="bg-white px-16 md:px-24 lg:px-48">
+  <div id="Experience" class="bg-white px-16 md:px-24 lg:px-52">
     <SectionHeading title="Experiences" />
     <div class="flex flex-col gap-4">
       <JobExperience image-src="/InfineonLogo.svg" image-alt="Infineon Logo">

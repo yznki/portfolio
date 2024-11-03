@@ -35,7 +35,8 @@
     fullWidth?: boolean
   }
 
-  const { disabled, icon, label, onClick, intent } = withDefaults(defineProps<ActionButtonProps>(), {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const props = withDefaults(defineProps<ActionButtonProps>(), {
     disabled: false,
     intent: "primary",
   })
