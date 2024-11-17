@@ -3,7 +3,7 @@
 
   const typeValue = ref("")
   const typeStatus = ref(false)
-  const typeArray = ["Software Engineer", "UI/UX Designer", "Graphic Designer"]
+  const typeArray = ["Software Engineer.", "UI/UX Designer.", "Graphic Designer."]
   const typingSpeed = 150
   const erasingSpeed = 100
   const newTextDelay = 1250

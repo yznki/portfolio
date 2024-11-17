@@ -14,7 +14,7 @@
 </script>
 
 <template>
-  <main class="h-screen w-screen bg-custom-gradient px-16 pt-12 md:px-32 lg:px-64">
+  <main class="h-screen w-screen bg-custom-gradient px-12 pt-8 md:px-24 lg:px-48">
     <div class="flex h-full w-full flex-col justify-between">
       <img src="/YLogo.svg" alt="Yazan's Logo" class="w-6 text-white" />
       <div class="flex w-full flex-col items-center justify-between md:flex-row">
@@ -22,7 +22,7 @@
         <NameDescription class="md:order-first" />
       </div>
       <DescriptiveParagraphs />
-      <div class="mb-8 mt-auto flex w-full flex-col items-center justify-center hover:cursor-pointer" @click="scrollToElement">
+      <div class="mb-8 mt-16 flex w-full flex-col items-center justify-center hover:cursor-pointer" @click="scrollToElement">
         <p class="font-bold text-text-color">Scroll Down</p>
         <FontAwesomeIcon :icon="faChevronDown" class="text-text-color" />
       </div>

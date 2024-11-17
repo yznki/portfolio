@@ -4,12 +4,15 @@
 </script>
 
 <template>
-  <div id="Experience" class="px-16 md:px-32 lg:px-64">
-    <SectionHeading bg-color="black" title="Projects" />
+  <div id="Experience" class="mb-4 pb-8">
+    <SectionHeading bg-color="black" title="Projects" class="px-12 md:px-24 lg:px-48" />
     <div class="grid grid-cols-1 md:grid-cols-3">
-      <ProjectCard logo-src="/SehatyLogo.svg" project-image="/SehatyProject.png" project-url="/sehaty" />
-      <div class="bg-gray-200 p-4">Column 2</div>
-      <div class="bg-gray-200 p-4">Column 3</div>
+      <ProjectCard logo-src="projects/sehaty/logo.svg" project-image="projects/sehaty/project.png" project-url="/sehaty" />
+      <ProjectCard logo-src="projects/sehaty/logo.svg" project-image="projects/sehaty/project.png" project-url="/sehaty" />
+      <ProjectCard logo-src="projects/sehaty/logo.svg" project-image="projects/sehaty/project.png" project-url="/sehaty" />
+      <ProjectCard logo-src="projects/sehaty/logo.svg" project-image="projects/sehaty/project.png" project-url="/sehaty" />
+      <ProjectCard logo-src="projects/sehaty/logo.svg" project-image="projects/sehaty/project.png" project-url="/sehaty" />
+      <ProjectCard logo-src="projects/sehaty/logo.svg" project-image="projects/sehaty/project.png" project-url="/sehaty" />
     </div>
   </div>
 </template>

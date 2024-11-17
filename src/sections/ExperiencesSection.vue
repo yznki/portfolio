@@ -11,12 +11,18 @@
 </script>
 
 <template>
-  <div id="Experience" class="bg-white px-16 md:px-32 lg:px-64">
+  <div id="Experience" class="bg-white px-12 md:px-24 lg:px-48">
     <SectionHeading title="Experiences" />
     <div class="flex flex-col gap-4">
       <JobExperience image-src="/InfineonLogo.svg" image-alt="Infineon Logo">
-        <JobDescription company-name="Infineon Technologies Austria" job-title="Software Engineer Intern" start-date="2024">
-          Coding my way through microchips and software magic—basically making tech work like a charm (while sipping too much coffee)!
+        <JobDescription company-name="Infineon Technologies Austria" job-title="Software Engineer" start-date="2024">
+          Coding my way through microchips and software magic—now as a full-time engineer after an early promotion from intern. Still making
+          tech work like a charm (while sipping too much coffee)!
+        </JobDescription>
+        <VerticalSeparator size="small" />
+        <JobDescription job-title="Software Engineer Intern" start-date="2024" end-date="2024">
+          Worked as an intern, swiftly navigating through projects, which led to a full-time role within just
+          <span class="font-bold italic">three months.</span>
         </JobDescription>
       </JobExperience>
       <VerticalSeparator size="large" />

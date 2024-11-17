@@ -2,7 +2,7 @@
 
 <template>
   <section class="hidden flex-col items-center justify-between gap-8 md:flex md:flex-row md:gap-16">
-    <div class="flex w-1/2 flex-col gap-8 md:flex-row md:gap-16">
+    <div class="flex w-2/3 flex-col gap-8 md:flex-row md:gap-16">
       <p class="md:min-w-1/2 text-justify text-text-color">
         I’m all about crafting <span class="font-bold italic">sleek interfaces</span> and powerful backends that keep things running
         smoothly—think of me as the <span class="font-bold italic">tech wizard</span> making sure everything just works.

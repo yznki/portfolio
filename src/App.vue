@@ -3,6 +3,7 @@
   import HeroSection from "./sections/HeroSection.vue"
   import ExperiencesSection from "./sections/ExperiencesSection.vue"
   import ProjectsSection from "./sections/ProjectsSection.vue"
+  import FooterSection from "./sections/FooterSection.vue"
 
   const isLoaded = ref(false)
 
@@ -17,6 +18,7 @@
       <HeroSection />
       <ExperiencesSection />
       <ProjectsSection />
+      <FooterSection />
     </div>
   </div>
 </template>

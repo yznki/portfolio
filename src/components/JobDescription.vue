@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { computed } from "vue"
+
   export interface JobExperienceProps {
     /**
      * The company name of the job experience.
@@ -23,13 +25,15 @@
   }
 
   const { companyName, endDate, startDate, jobTitle } = defineProps<JobExperienceProps>()
+
+  const endDateString = computed(() => (endDate == startDate ? "" : endDate ? ` - ${endDate}` : " - Present"))
 </script>
 
 <template>
   <div class="flex flex-col items-start justify-center">
     <p v-if="companyName" class="text-xl font-bold md:text-3xl">{{ companyName }}</p>
     <p class="md:text-lg">
-      <span class="text-primary-500">{{ jobTitle }}</span> | {{ startDate }} - {{ endDate ?? "Present" }}
+      <span class="text-primary-500">{{ jobTitle }}</span> | {{ startDate }}{{ endDateString }}
     </p>
     <p class="text-justify text-[#707070]"><slot /></p>
   </div>
