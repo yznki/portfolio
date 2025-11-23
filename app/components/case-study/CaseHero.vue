@@ -2,61 +2,56 @@
   <section
     ref="sectionRef"
     :class="[
-      baseSection,
+      sectionBase,
       'transition duration-700 ease-out',
       isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6',
       classOverride
     ]"
     :aria-label="ariaLabel || 'Case study hero'"
   >
-    <div :class="wrapperClasses">
-      <div class="flex flex-col gap-6 lg:gap-8">
-        <div class="flex items-center gap-3 text-sm font-medium tracking-tight uppercase text-slate-500">
-          <span class="inline-flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
-            {{ label || 'Brand Identity' }}
-          </span>
-          <span class="text-slate-400">•</span>
-          <span>{{ year || '2024' }}</span>
-        </div>
-        <div class="flex flex-col gap-4">
-          <h1 :class="titleClasses">{{ title || 'Brand Revival for Solstice Studio' }}</h1>
-          <p :class="taglineClasses">
-            {{ tagline || 'Building a resilient, elevated brand language for a global creative collective.' }}
-          </p>
-        </div>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div :class="infoCardClasses">
-            <p class="text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Role</p>
-            <p class="text-base font-semibold text-slate-900" :class="textOnDark">{{ role || 'Lead Designer' }}</p>
+    <CaseContainer>
+      <div :class="heroGrid">
+        <div class="flex flex-col gap-6 lg:gap-8">
+          <div class="flex items-center gap-3 text-xs uppercase tracking-[0.12em]" :class="metaColor">
+            <span class="inline-flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
+              {{ label || 'Brand Identity' }}
+            </span>
+            <span :class="separatorColor">•</span>
+            <span>{{ year || '2024' }}</span>
           </div>
-          <div :class="infoCardClasses">
-            <p class="text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Services</p>
-            <ul class="mt-2 space-y-1 text-base font-semibold text-slate-900" :class="textOnDark">
-              <li v-for="service in servicesToRender" :key="service">{{ service }}</li>
-            </ul>
-          </div>
-          <div :class="infoCardClasses">
-            <p class="text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Impact</p>
-            <p class="mt-2 text-base font-semibold text-slate-900" :class="textOnDark">
-              {{ impact || '35% uplift in brand recall across key markets.' }}
+          <div class="flex flex-col gap-3">
+            <h1 :class="titleClasses">{{ title || 'Brand Revival for Solstice Studio' }}</h1>
+            <p :class="taglineClasses">
+              {{ tagline || 'Building a resilient, elevated brand language for a global creative collective.' }}
             </p>
           </div>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <CaseStatCard :label="'Role'" :variant="variant">
+              {{ role || 'Lead Designer' }}
+            </CaseStatCard>
+            <CaseStatCard :label="'Services'" :variant="variant">
+              <ul class="space-y-1">
+                <li v-for="service in servicesToRender" :key="service">{{ service }}</li>
+              </ul>
+            </CaseStatCard>
+            <CaseStatCard :label="'Impact'" :variant="variant">
+              {{ impact || '35% uplift in brand recall across key markets.' }}
+            </CaseStatCard>
+          </div>
+        </div>
+        <div v-if="image" :class="imageWrapperClasses">
+          <img :src="image" :alt="imageAlt || 'Case study hero visual'" class="h-full w-full object-cover" />
         </div>
       </div>
-      <div v-if="image" :class="imageWrapperClasses">
-        <img
-          :src="image"
-          :alt="imageAlt || 'Case study hero visual'"
-          class="h-full w-full object-cover"
-        />
-      </div>
-    </div>
+    </CaseContainer>
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import CaseContainer from './CaseContainer.vue'
+import CaseStatCard from './CaseStatCard.vue'
 
 type Variant = 'minimal' | 'editorial' | 'bold'
 
@@ -93,77 +88,58 @@ onMounted(() => {
   observer.observe(sectionRef.value)
 })
 
-onBeforeUnmount(() => {
-  observer?.disconnect()
-})
+onBeforeUnmount(() => observer?.disconnect())
 
-const servicesToRender = computed(() => props.services?.length ? props.services : ['Identity system', 'Design language', 'Guidelines'])
+const servicesToRender = computed(() =>
+  props.services?.length ? props.services : ['Identity system', 'Design language', 'Guidelines']
+)
 
-const baseSection = computed(() => {
+const sectionBase = computed(() => {
   switch (props.variant as Variant) {
     case 'editorial':
       return 'bg-white text-slate-900'
     case 'bold':
-      return 'bg-slate-900 text-white'
+      return 'bg-slate-950 text-white'
     default:
       return 'bg-slate-50 text-slate-900'
   }
 })
 
-const wrapperClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mx-auto flex max-w-6xl flex-col gap-10 px-6 py-14 lg:px-12 lg:py-16 lg:flex-row lg:items-end'
-    case 'bold':
-      return 'mx-auto grid max-w-6xl grid-cols-1 gap-10 px-6 py-16 lg:grid-cols-2 lg:px-12 lg:py-20'
-    default:
-      return 'mx-auto grid max-w-5xl grid-cols-1 gap-10 px-6 py-14 lg:grid-cols-3 lg:px-10'
+const heroGrid = computed(() => {
+  if (props.variant === 'bold') {
+    return 'grid grid-cols-1 gap-10 lg:grid-cols-2'
   }
+  return 'grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_0.9fr]'
 })
 
-const titleClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'text-4xl font-semibold tracking-tight sm:text-5xl lg:text-[3.25rem]'
-    case 'bold':
-      return 'text-4xl font-bold tracking-tight sm:text-5xl lg:text-[3.5rem] text-white'
-    default:
-      return 'text-4xl font-semibold tracking-tight sm:text-5xl'
-  }
-})
+const titleClasses = computed(() =>
+  props.variant === 'bold'
+    ? 'text-3xl md:text-[3rem] font-bold tracking-tight'
+    : 'text-3xl md:text-4xl font-semibold tracking-tight'
+)
 
 const taglineClasses = computed(() => {
   switch (props.variant as Variant) {
     case 'editorial':
-      return 'max-w-2xl text-lg text-slate-600'
+      return 'max-w-2xl text-base md:text-lg leading-relaxed text-slate-600'
     case 'bold':
-      return 'max-w-xl text-lg text-slate-200'
+      return 'max-w-2xl text-base md:text-lg leading-relaxed text-slate-200'
     default:
-      return 'max-w-2xl text-lg text-slate-700'
-  }
-})
-
-const infoCardClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'rounded-2xl border border-slate-100/80 bg-white/70 p-4 shadow-sm backdrop-blur'
-    case 'bold':
-      return 'rounded-xl border border-white/10 bg-white/5 p-4 shadow-inner'
-    default:
-      return 'rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm'
+      return 'max-w-2xl text-base md:text-lg leading-relaxed text-slate-700'
   }
 })
 
 const imageWrapperClasses = computed(() => {
   switch (props.variant as Variant) {
     case 'editorial':
-      return 'relative h-72 w-full overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-100 shadow-lg lg:h-full'
+      return 'relative h-80 w-full overflow-hidden rounded-3xl border border-slate-100 bg-slate-50 shadow-lg'
     case 'bold':
-      return 'relative h-80 w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl'
+      return 'relative h-80 w-full overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800'
     default:
-      return 'relative h-72 w-full overflow-hidden rounded-[28px] border border-slate-200/60 bg-white shadow-lg lg:col-span-2'
+      return 'relative h-80 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg'
   }
 })
 
-const textOnDark = computed(() => (props.variant === 'bold' ? 'text-white' : ''))
+const metaColor = computed(() => (props.variant === 'bold' ? 'text-slate-300' : 'text-slate-500'))
+const separatorColor = computed(() => (props.variant === 'bold' ? 'text-slate-400' : 'text-slate-400'))
 </script>

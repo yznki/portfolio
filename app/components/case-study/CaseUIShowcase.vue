@@ -9,51 +9,45 @@
     ]"
     :aria-label="ariaLabel || 'UI showcase'"
   >
-    <div :class="containerClasses">
-      <div class="flex flex-col gap-3">
-        <p :class="kickerClasses">Interface</p>
-        <h3 :class="titleClasses">{{ title || 'Interfaces designed to feel inevitable' }}</h3>
-        <p :class="descriptionClasses">
-          {{ description || 'Each UI surface borrows from the brand language—rhythmic spacing, confident typography, and focus on clarity.' }}
-        </p>
+    <CaseContainer>
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <p :class="kickerClasses">Interface</p>
+          <h3 :class="titleClasses">{{ title || 'UI library built for clarity' }}</h3>
+          <p :class="descriptionClasses">
+            {{ description || 'Reusable UI building blocks styled for brand fidelity and usability.' }}
+          </p>
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <CaseUIBlock
+            v-for="block in blocksToRender"
+            :key="block.label"
+            :label="block.label"
+            :title="block.title"
+            :description="block.description"
+            :tag="block.tag"
+            :image="block.image"
+            :variant="variant"
+          />
+        </div>
       </div>
-      <div :class="gridClasses">
-        <article
-          v-for="shot in shotsToRender"
-          :key="shot.title"
-          :class="cardClasses"
-        >
-          <div class="relative overflow-hidden rounded-2xl" :class="imageFrameClasses">
-            <img
-              :src="shot.image"
-              :alt="shot.title"
-              class="h-56 w-full object-cover transition duration-500 hover:scale-[1.02]"
-            />
-            <div v-if="shot.tag" class="absolute left-4 top-4 rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white">
-              {{ shot.tag }}
-            </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <h4 class="text-lg font-semibold text-slate-900" :class="textOnDark">{{ shot.title }}</h4>
-            <p class="text-sm text-slate-600" :class="textMuted">{{ shot.description }}</p>
-          </div>
-        </article>
-      </div>
-    </div>
+    </CaseContainer>
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import CaseContainer from './CaseContainer.vue'
+import CaseUIBlock from './CaseUIBlock.vue'
 
 type Variant = 'minimal' | 'editorial' | 'bold'
 
-type Shot = { title: string; description: string; image: string; tag?: string }
+type Block = { label: string; title: string; description: string; tag: string; image: string }
 
 const props = defineProps({
   title: { type: String, default: '' },
   description: { type: String, default: '' },
-  shots: { type: Array as () => Shot[], default: () => [] },
+  blocks: { type: Array as () => Block[], default: () => [] },
   variant: { type: String as () => Variant, default: 'minimal' },
   ariaLabel: { type: String, default: '' },
   classOverride: { type: String, default: '' }
@@ -72,34 +66,37 @@ onMounted(() => {
         observer?.disconnect()
       }
     },
-    { threshold: 0.15 }
+    { threshold: 0.2 }
   )
   observer.observe(sectionRef.value)
 })
 
 onBeforeUnmount(() => observer?.disconnect())
 
-const shotsToRender = computed<Shot[]>(() =>
-  props.shots?.length
-    ? props.shots
+const blocksToRender = computed<Block[]>(() =>
+  props.blocks?.length
+    ? props.blocks
     : [
         {
-          title: 'Design System Dashboard',
-          description: 'Unified control center with modular cards and progressive disclosure.',
-          image: 'https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1200&q=80',
-          tag: 'Product'
+          label: 'Dashboards',
+          tag: 'Product',
+          title: 'Metrics Hub',
+          description: 'High-clarity charting and controls for decision makers.',
+          image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80'
         },
         {
-          title: 'Mobile Experience',
-          description: 'Edge-to-edge canvas with focus on legibility and tactile controls.',
-          image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80',
-          tag: 'Mobile'
+          label: 'Marketing',
+          tag: 'Web',
+          title: 'Campaign landing',
+          description: 'Hero, testimonials, and pricing components under one language.',
+          image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=80'
         },
         {
-          title: 'Guideline Library',
-          description: 'Editorial layouts tailored for onboarding and governance.',
-          image: 'https://images.unsplash.com/photo-1522199710521-72d69614c702?auto=format&fit=crop&w=1200&q=80',
-          tag: 'Docs'
+          label: 'Design system',
+          tag: 'Components',
+          title: 'Atoms + molecules',
+          description: 'Buttons, forms, cards, and overlays defined for teams.',
+          image: 'https://images.unsplash.com/photo-1523475472560-d2df97ec485c?auto=format&fit=crop&w=900&q=80'
         }
       ]
 )
@@ -115,68 +112,26 @@ const baseClasses = computed(() => {
   }
 })
 
-const containerClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mx-auto max-w-6xl px-6 py-14 lg:px-12'
-    case 'bold':
-      return 'mx-auto max-w-6xl px-6 py-16 lg:px-12'
-    default:
-      return 'mx-auto max-w-5xl px-6 py-12 lg:px-10'
-  }
-})
-
 const kickerClasses = computed(() =>
   props.variant === 'bold'
-    ? 'text-xs font-semibold uppercase tracking-[0.12em] text-emerald-300'
-    : 'text-xs font-semibold uppercase tracking-[0.12em] text-slate-500'
+    ? 'text-xs uppercase tracking-[0.12em] text-emerald-300'
+    : 'text-xs uppercase tracking-[0.12em] text-slate-500'
 )
 
 const titleClasses = computed(() =>
   props.variant === 'bold'
-    ? 'text-3xl font-bold tracking-tight text-white'
-    : 'text-3xl font-semibold tracking-tight text-slate-900'
+    ? 'text-3xl md:text-[3rem] font-bold tracking-tight'
+    : 'text-3xl md:text-4xl font-semibold tracking-tight'
 )
 
 const descriptionClasses = computed(() => {
   switch (props.variant as Variant) {
     case 'editorial':
-      return 'max-w-3xl text-lg leading-relaxed text-slate-600'
+      return 'max-w-3xl text-base md:text-lg leading-relaxed text-slate-600'
     case 'bold':
-      return 'max-w-3xl text-lg leading-relaxed text-slate-200'
+      return 'max-w-3xl text-base md:text-lg leading-relaxed text-slate-200'
     default:
-      return 'max-w-3xl text-lg leading-relaxed text-slate-700'
+      return 'max-w-3xl text-base md:text-lg leading-relaxed text-slate-700'
   }
 })
-
-const gridClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'
-    case 'bold':
-      return 'mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'
-    default:
-      return 'mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'
-  }
-})
-
-const cardClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'flex flex-col gap-4 rounded-2xl border border-slate-100 bg-white/70 p-4 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-md'
-    case 'bold':
-      return 'flex flex-col gap-4 rounded-xl border border-white/10 bg-white/5 p-4 shadow-inner transition hover:-translate-y-1 hover:border-emerald-300/40'
-    default:
-      return 'flex flex-col gap-4 rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm transition hover:-translate-y-1'
-  }
-})
-
-const imageFrameClasses = computed(() =>
-  props.variant === 'bold'
-    ? 'border border-white/10 bg-slate-800'
-    : 'border border-slate-200/70 bg-slate-100'
-)
-
-const textOnDark = computed(() => (props.variant === 'bold' ? 'text-white' : ''))
-const textMuted = computed(() => (props.variant === 'bold' ? 'text-slate-300' : 'text-slate-600'))
 </script>

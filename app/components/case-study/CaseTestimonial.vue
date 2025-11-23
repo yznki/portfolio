@@ -9,46 +9,46 @@
     ]"
     :aria-label="ariaLabel || 'Testimonial'"
   >
-    <div :class="containerClasses">
-      <div :class="quoteWrapperClasses">
-        <div class="flex items-center gap-3">
-          <div v-if="avatar" class="h-12 w-12 overflow-hidden rounded-full border border-white/30">
-            <img :src="avatar" :alt="author" class="h-full w-full object-cover" />
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-slate-900" :class="textOnDark">{{ author || 'Jordan Patel' }}</p>
-            <p class="text-xs text-slate-500" :class="textMuted">{{ role || 'Chief Brand Officer, Northwind' }}</p>
+    <CaseContainer>
+      <div :class="wrapperClasses">
+        <div class="space-y-3">
+          <p :class="kickerClasses">Testimonial</p>
+          <h3 :class="titleClasses">{{ heading || 'Partner praise' }}</h3>
+        </div>
+        <div class="relative space-y-4">
+          <span v-if="variant === 'bold'" class="absolute -left-4 -top-8 text-7xl font-black text-white/10" aria-hidden="true">“</span>
+          <p :class="quoteClasses">{{ quote || 'The new system elevated every interaction. It is intentional, expressive, and accessible.' }}</p>
+          <div class="flex items-center gap-3">
+            <img :src="avatar || defaultAvatar" alt="" class="h-12 w-12 rounded-full object-cover" />
+            <div>
+              <p class="text-base font-semibold" :class="nameColor">{{ name || 'Jordan Rivera' }}</p>
+              <p class="text-sm" :class="roleColor">{{ role || 'Brand Director, Solstice Studio' }}</p>
+            </div>
           </div>
         </div>
-        <blockquote :class="quoteClasses">
-          “{{ quote || 'The new system re-energized how our teams build. It strikes the balance between discipline and delight.' }}”
-        </blockquote>
       </div>
-      <div :class="calloutClasses">
-        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-600" :class="textMuted">Signal</p>
-        <p class="text-sm text-slate-700" :class="textMuted">
-          {{ callout || 'Documented impact and stakeholder confidence through design rituals and systemized delivery.' }}
-        </p>
-      </div>
-    </div>
+    </CaseContainer>
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import CaseContainer from './CaseContainer.vue'
 
 type Variant = 'minimal' | 'editorial' | 'bold'
 
 const props = defineProps({
+  heading: { type: String, default: '' },
   quote: { type: String, default: '' },
-  author: { type: String, default: '' },
+  name: { type: String, default: '' },
   role: { type: String, default: '' },
   avatar: { type: String, default: '' },
-  callout: { type: String, default: '' },
   variant: { type: String as () => Variant, default: 'minimal' },
   ariaLabel: { type: String, default: '' },
   classOverride: { type: String, default: '' }
 })
+
+const defaultAvatar = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80'
 
 const sectionRef = ref<HTMLElement | null>(null)
 const isVisible = ref(false)
@@ -63,7 +63,7 @@ onMounted(() => {
         observer?.disconnect()
       }
     },
-    { threshold: 0.2 }
+    { threshold: 0.15 }
   )
   observer.observe(sectionRef.value)
 })
@@ -81,40 +81,31 @@ const baseClasses = computed(() => {
   }
 })
 
-const containerClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mx-auto flex max-w-5xl flex-col gap-6 px-6 py-14 lg:flex-row lg:items-center lg:gap-12 lg:px-12'
-    case 'bold':
-      return 'mx-auto flex max-w-6xl flex-col gap-8 px-6 py-16 lg:flex-row lg:items-center lg:gap-16 lg:px-12'
-    default:
-      return 'mx-auto flex max-w-5xl flex-col gap-6 px-6 py-12 lg:flex-row lg:items-center lg:gap-10 lg:px-10'
-  }
+const wrapperClasses = computed(() => {
+  const radius = props.variant === 'bold' ? 'rounded-xl' : props.variant === 'editorial' ? 'rounded-3xl' : 'rounded-2xl'
+  const bg = props.variant === 'bold' ? 'border border-white/10 bg-white/5' : 'border border-slate-200 bg-white'
+  const editorialBg = props.variant === 'editorial' ? 'border-slate-100 bg-white/70 backdrop-blur' : ''
+  return `${radius} ${bg} ${editorialBg} p-8 space-y-6`
 })
 
-const quoteWrapperClasses = computed(() =>
+const kickerClasses = computed(() =>
   props.variant === 'bold'
-    ? 'flex-1 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-inner'
-    : 'flex-1 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm'
+    ? 'text-xs uppercase tracking-[0.12em] text-emerald-300'
+    : 'text-xs uppercase tracking-[0.12em] text-slate-500'
 )
 
-const quoteClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mt-4 text-2xl font-semibold leading-tight text-slate-900'
-    case 'bold':
-      return 'mt-4 text-2xl font-bold leading-tight text-white'
-    default:
-      return 'mt-4 text-2xl font-semibold leading-tight text-slate-900'
-  }
-})
-
-const calloutClasses = computed(() =>
+const titleClasses = computed(() =>
   props.variant === 'bold'
-    ? 'flex-1 rounded-xl border border-white/10 bg-white/5 p-5 text-slate-200 shadow-inner'
-    : 'flex-1 rounded-xl border border-slate-200/70 bg-emerald-50 p-5 text-emerald-900 shadow-sm'
+    ? 'text-3xl md:text-[3rem] font-bold tracking-tight'
+    : 'text-3xl md:text-4xl font-semibold tracking-tight'
 )
 
-const textOnDark = computed(() => (props.variant === 'bold' ? 'text-white' : ''))
-const textMuted = computed(() => (props.variant === 'bold' ? 'text-slate-300' : 'text-slate-600'))
+const quoteClasses = computed(() =>
+  props.variant === 'bold'
+    ? 'text-lg md:text-xl leading-relaxed text-slate-100'
+    : 'text-lg md:text-xl leading-relaxed text-slate-800'
+)
+
+const nameColor = computed(() => (props.variant === 'bold' ? 'text-white' : 'text-slate-900'))
+const roleColor = computed(() => (props.variant === 'bold' ? 'text-slate-300' : 'text-slate-600'))
 </script>

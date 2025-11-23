@@ -7,56 +7,57 @@
       isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
       classOverride
     ]"
-    :aria-label="ariaLabel || 'Feature highlights'"
+    :aria-label="ariaLabel || 'Feature grid'"
   >
-    <div :class="containerClasses">
-      <div class="flex flex-col gap-3">
-        <p :class="kickerClasses">Highlights</p>
-        <h3 :class="titleClasses">{{ title || 'Systems thinking that keeps brands coherent' }}</h3>
-        <p :class="descriptionClasses">
-          {{ description || 'Feature blocks that translate strategic pillars into tactile experiences across every touchpoint.' }}
-        </p>
-      </div>
-      <div :class="gridClasses">
-        <div
-          v-for="feature in featuresToRender"
-          :key="feature.title"
-          :class="featureCardClasses"
-        >
-          <div class="flex items-center gap-3">
-            <div :class="iconClasses">
-              <span class="text-lg">{{ feature.icon || '✦' }}</span>
-            </div>
-            <div class="flex flex-col gap-1">
-              <p class="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500" :class="textMuted">{{ feature.category }}</p>
-              <h4 class="text-lg font-semibold text-slate-900" :class="textOnDark">{{ feature.title }}</h4>
-            </div>
-          </div>
-          <p class="text-sm leading-relaxed text-slate-600" :class="textMuted">
-            {{ feature.description }}
+    <CaseContainer>
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <p :class="kickerClasses">Highlights</p>
+          <h3 :class="titleClasses">{{ title || 'Principles translated into interfaces' }}</h3>
+          <p :class="descriptionClasses">
+            {{ description || 'Feature building blocks framed with clear hierarchy and supportive tags.' }}
           </p>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="tag in feature.tags || []"
-              :key="tag"
-              class="rounded-full px-3 py-1 text-xs font-semibold"
-              :class="pillClasses"
-            >
-              {{ tag }}
-            </span>
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div
+            v-for="feature in featuresToRender"
+            :key="feature.title"
+            :class="cardClasses"
+          >
+            <div class="flex items-center gap-3">
+              <div :class="iconWrapper">
+                <span class="text-xl" aria-hidden="true">{{ feature.icon }}</span>
+              </div>
+              <div>
+                <p class="text-lg md:text-xl font-semibold" :class="titleColor">{{ feature.title }}</p>
+                <p class="text-sm text-slate-600" :class="metaColor">{{ feature.tag }}</p>
+              </div>
+            </div>
+            <p class="text-base leading-relaxed" :class="bodyColor">{{ feature.description }}</p>
+            <div class="flex flex-wrap gap-2">
+              <span
+                v-for="pill in feature.pills"
+                :key="pill"
+                class="text-xs uppercase tracking-[0.1em] px-3 py-1 rounded-full"
+                :class="pillClasses"
+              >
+                {{ pill }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </CaseContainer>
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import CaseContainer from './CaseContainer.vue'
 
 type Variant = 'minimal' | 'editorial' | 'bold'
 
-type Feature = { title: string; description: string; category?: string; tags?: string[]; icon?: string }
+type Feature = { title: string; description: string; tag: string; pills: string[]; icon: string }
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -80,7 +81,7 @@ onMounted(() => {
         observer?.disconnect()
       }
     },
-    { threshold: 0.15 }
+    { threshold: 0.18 }
   )
   observer.observe(sectionRef.value)
 })
@@ -92,25 +93,32 @@ const featuresToRender = computed<Feature[]>(() =>
     ? props.features
     : [
         {
-          category: 'Systems',
-          title: 'Component library',
-          description: 'Reusable UI primitives with clear states and accessibility baked in.',
-          tags: ['Atoms', 'Tokens', 'States'],
-          icon: '🧩'
+          title: 'Design tokens',
+          description: 'Unified spacing, color, and typography scales keep teams aligned.',
+          tag: 'System',
+          pills: ['tokens', 'scales'],
+          icon: '✦'
         },
         {
-          category: 'Identity',
-          title: 'Motion language',
-          description: 'Micro-interactions that reinforce the brand voice without overwhelm.',
-          tags: ['Easing', 'Timing', 'Microcopy'],
-          icon: '✨'
+          title: 'Responsive grid',
+          description: 'Layouts adapt across breakpoints with intentional whitespace.',
+          tag: 'Layout',
+          pills: ['grid', 'rhythm'],
+          icon: '▥'
         },
         {
-          category: 'Governance',
-          title: 'Guideline hub',
-          description: 'Editorial-style documentation that keeps teams aligned.',
-          tags: ['Templates', 'Narrative', 'Snippets'],
-          icon: '📘'
+          title: 'Micro-interactions',
+          description: 'Hover and focus states guide attention without distraction.',
+          tag: 'Motion',
+          pills: ['feedback', 'a11y'],
+          icon: '↺'
+        },
+        {
+          title: 'Documentation',
+          description: 'Usage notes and examples make onboarding faster for collaborators.',
+          tag: 'Guides',
+          pills: ['guides', 'handoff'],
+          icon: '☰'
         }
       ]
 )
@@ -126,74 +134,48 @@ const baseClasses = computed(() => {
   }
 })
 
-const containerClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mx-auto max-w-6xl px-6 py-14 lg:px-12'
-    case 'bold':
-      return 'mx-auto max-w-6xl px-6 py-16 lg:px-12'
-    default:
-      return 'mx-auto max-w-5xl px-6 py-12 lg:px-10'
-  }
-})
-
 const kickerClasses = computed(() =>
   props.variant === 'bold'
-    ? 'text-xs font-semibold uppercase tracking-[0.12em] text-emerald-300'
-    : 'text-xs font-semibold uppercase tracking-[0.12em] text-slate-500'
+    ? 'text-xs uppercase tracking-[0.12em] text-emerald-300'
+    : 'text-xs uppercase tracking-[0.12em] text-slate-500'
 )
 
 const titleClasses = computed(() =>
   props.variant === 'bold'
-    ? 'text-3xl font-bold tracking-tight text-white'
-    : 'text-3xl font-semibold tracking-tight text-slate-900'
+    ? 'text-3xl md:text-[3rem] font-bold tracking-tight'
+    : 'text-3xl md:text-4xl font-semibold tracking-tight'
 )
 
 const descriptionClasses = computed(() => {
   switch (props.variant as Variant) {
     case 'editorial':
-      return 'max-w-3xl text-lg leading-relaxed text-slate-600'
+      return 'max-w-3xl text-base md:text-lg leading-relaxed text-slate-600'
     case 'bold':
-      return 'max-w-3xl text-lg leading-relaxed text-slate-200'
+      return 'max-w-3xl text-base md:text-lg leading-relaxed text-slate-200'
     default:
-      return 'max-w-3xl text-lg leading-relaxed text-slate-700'
+      return 'max-w-3xl text-base md:text-lg leading-relaxed text-slate-700'
   }
 })
 
-const gridClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'
-    case 'bold':
-      return 'mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'
-    default:
-      return 'mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
-  }
+const cardClasses = computed(() => {
+  const radius = props.variant === 'bold' ? 'rounded-xl' : props.variant === 'editorial' ? 'rounded-3xl' : 'rounded-2xl'
+  const bg = props.variant === 'bold' ? 'border border-white/10 bg-white/5' : 'border border-slate-200 bg-white'
+  const editorialBg = props.variant === 'editorial' ? 'border-slate-100 bg-white/70 backdrop-blur' : ''
+  return `${radius} ${bg} ${editorialBg} p-6 flex flex-col gap-3 transition hover:-translate-y-0.5`
 })
 
-const featureCardClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'flex flex-col gap-3 rounded-2xl border border-slate-100 bg-white/70 p-5 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-md'
-    case 'bold':
-      return 'flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-5 shadow-inner transition hover:-translate-y-1 hover:border-emerald-300/40'
-    default:
-      return 'flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition hover:-translate-y-1'
-  }
-})
-
-const iconClasses = computed(() =>
+const iconWrapper = computed(() =>
   props.variant === 'bold'
-    ? 'flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-lg'
-    : 'flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-lg text-emerald-700'
+    ? 'flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 border border-white/10 text-white'
+    : 'flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-900'
 )
 
+const titleColor = computed(() => (props.variant === 'bold' ? 'text-white' : 'text-slate-900'))
+const metaColor = computed(() => (props.variant === 'bold' ? 'text-slate-300' : 'text-slate-500'))
+const bodyColor = computed(() => (props.variant === 'bold' ? 'text-slate-200' : 'text-slate-700'))
 const pillClasses = computed(() =>
   props.variant === 'bold'
-    ? 'bg-white/5 text-emerald-200 border border-emerald-300/40'
-    : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+    ? 'bg-white/10 text-slate-200 border border-white/15'
+    : 'bg-slate-100 text-slate-700 border border-slate-200'
 )
-
-const textOnDark = computed(() => (props.variant === 'bold' ? 'text-white' : ''))
-const textMuted = computed(() => (props.variant === 'bold' ? 'text-slate-300' : 'text-slate-600'))
 </script>

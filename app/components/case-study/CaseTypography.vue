@@ -9,41 +9,51 @@
     ]"
     :aria-label="ariaLabel || 'Typography system'"
   >
-    <div :class="containerClasses">
-      <div class="space-y-3">
-        <p :class="kickerClasses">Typography</p>
-        <h3 :class="titleClasses">{{ title || 'Precision typography for digital and print' }}</h3>
-        <p :class="descriptionClasses">
-          {{ description || 'A disciplined typographic stack that adapts across touchpoints with optical sizing and expressive display options.' }}
-        </p>
-        <div :class="badgeRowClasses">
-          <span class="rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm" v-if="fontName">
-            {{ fontName }}
-          </span>
-          <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700" v-if="secondaryFont">
-            {{ secondaryFont }}
-          </span>
-        </div>
-      </div>
-      <div :class="samplesWrapperClasses">
-        <div
-          v-for="sample in samplesToRender"
-          :key="sample.label"
-          :class="sampleCardClasses"
-        >
-          <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.1em] text-slate-500" :class="textOnDark">
-            <span>{{ sample.label }}</span>
-            <span>{{ sample.size }}</span>
+    <CaseContainer>
+      <div class="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
+        <div class="space-y-3">
+          <p :class="kickerClasses">Typography</p>
+          <h3 :class="titleClasses">{{ title || 'Precision typography for digital and print' }}</h3>
+          <p :class="descriptionClasses">
+            {{ description || 'A disciplined typographic stack that adapts across touchpoints with optical sizing and expressive display options.' }}
+          </p>
+          <div class="flex flex-wrap items-center gap-3">
+            <span v-if="fontName" class="rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
+              {{ fontName }}
+            </span>
+            <span v-if="secondaryFont" class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+              {{ secondaryFont }}
+            </span>
           </div>
-          <p :class="sampleTextClasses">{{ sample.text }}</p>
+        </div>
+        <div class="grid grid-cols-1 gap-4" :class="ghostWrapper">
+          <div
+            v-for="sample in samplesToRender"
+            :key="sample.label"
+            :class="sampleCardClasses"
+          >
+            <div class="flex items-center justify-between text-xs uppercase tracking-[0.1em]" :class="metaColor">
+              <span>{{ sample.label }}</span>
+              <span>{{ sample.size }}</span>
+            </div>
+            <p :class="sampleTextClasses">{{ sample.text }}</p>
+          </div>
+          <span
+            v-if="variant === 'bold'"
+            aria-hidden="true"
+            class="pointer-events-none absolute -right-6 -top-8 text-8xl font-black uppercase text-white/5"
+          >
+            {{ (fontName || 'S')?.charAt(0) }}
+          </span>
         </div>
       </div>
-    </div>
+    </CaseContainer>
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import CaseContainer from './CaseContainer.vue'
 
 type Variant = 'minimal' | 'editorial' | 'bold'
 
@@ -95,89 +105,52 @@ const baseClasses = computed(() => {
     case 'editorial':
       return 'bg-white text-slate-900'
     case 'bold':
-      return 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white'
+      return 'bg-slate-950 text-white'
     default:
       return 'bg-slate-50 text-slate-900'
   }
 })
 
-const containerClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mx-auto grid max-w-5xl grid-cols-1 gap-10 px-6 py-14 lg:grid-cols-[1.1fr_1fr] lg:px-12'
-    case 'bold':
-      return 'mx-auto grid max-w-6xl grid-cols-1 gap-8 px-6 py-16 lg:grid-cols-[1fr_1.1fr] lg:px-12'
-    default:
-      return 'mx-auto grid max-w-5xl grid-cols-1 gap-8 px-6 py-12 lg:grid-cols-[1fr_1fr] lg:px-10'
-  }
-})
-
 const kickerClasses = computed(() =>
   props.variant === 'bold'
-    ? 'text-xs font-semibold uppercase tracking-[0.12em] text-emerald-300'
-    : 'text-xs font-semibold uppercase tracking-[0.12em] text-slate-500'
+    ? 'text-xs uppercase tracking-[0.12em] text-emerald-300'
+    : 'text-xs uppercase tracking-[0.12em] text-slate-500'
 )
 
-const titleClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'text-2xl font-semibold tracking-tight sm:text-3xl'
-    case 'bold':
-      return 'text-3xl font-bold tracking-tight text-white'
-    default:
-      return 'text-2xl font-semibold tracking-tight sm:text-3xl'
-  }
-})
+const titleClasses = computed(() =>
+  props.variant === 'bold'
+    ? 'text-3xl md:text-[3rem] font-bold tracking-tight'
+    : 'text-3xl md:text-4xl font-semibold tracking-tight'
+)
 
 const descriptionClasses = computed(() => {
   switch (props.variant as Variant) {
     case 'editorial':
-      return 'max-w-2xl text-lg leading-relaxed text-slate-600'
+      return 'max-w-2xl text-base md:text-lg leading-relaxed text-slate-600'
     case 'bold':
-      return 'max-w-2xl text-lg leading-relaxed text-slate-200'
+      return 'max-w-2xl text-base md:text-lg leading-relaxed text-slate-200'
     default:
-      return 'max-w-2xl text-lg leading-relaxed text-slate-700'
-  }
-})
-
-const badgeRowClasses = computed(() =>
-  props.variant === 'bold'
-    ? 'flex flex-wrap items-center gap-3'
-    : 'flex flex-wrap items-center gap-3'
-)
-
-const samplesWrapperClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'grid grid-cols-1 gap-4'
-    case 'bold':
-      return 'grid grid-cols-1 gap-4'
-    default:
-      return 'grid grid-cols-1 gap-4'
+      return 'max-w-2xl text-base md:text-lg leading-relaxed text-slate-700'
   }
 })
 
 const sampleCardClasses = computed(() => {
   switch (props.variant as Variant) {
     case 'editorial':
-      return 'rounded-2xl border border-slate-100/80 bg-white/70 p-5 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md'
+      return 'rounded-3xl border border-slate-100 bg-white/70 p-5 shadow-sm backdrop-blur'
     case 'bold':
-      return 'rounded-xl border border-white/10 bg-white/5 p-5 shadow-inner transition hover:-translate-y-0.5 hover:border-emerald-300/40'
+      return 'relative rounded-xl border border-white/10 bg-white/5 p-5'
     default:
-      return 'rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition hover:-translate-y-0.5'
+      return 'rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm'
   }
 })
 
-const sampleTextClasses = computed(() => {
-  switch (props.variant as Variant) {
-    case 'editorial':
-      return 'mt-2 text-2xl font-semibold text-slate-900 sm:text-3xl'
-    case 'bold':
-      return 'mt-2 text-2xl font-bold text-white sm:text-3xl'
-    default:
-      return 'mt-2 text-2xl font-semibold text-slate-900 sm:text-3xl'
-  }
-})
+const sampleTextClasses = computed(() =>
+  props.variant === 'bold'
+    ? 'mt-2 text-2xl md:text-3xl font-bold text-white'
+    : 'mt-2 text-2xl md:text-3xl font-semibold text-slate-900'
+)
 
-const textOnDark = computed(() => (props.variant === 'bold' ? 'text-white' : ''))
+const metaColor = computed(() => (props.variant === 'bold' ? 'text-slate-300' : 'text-slate-500'))
+const ghostWrapper = computed(() => (props.variant === 'bold' ? 'relative' : ''))
 </script>
