@@ -1,0 +1,30 @@
+@config "../../../tailwind.config.ts";
+@import "tailwindcss";
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+body {
+  @apply overflow-y-auto bg-background;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #181818;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #181818;
+}
