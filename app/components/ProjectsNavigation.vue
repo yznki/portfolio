@@ -4,6 +4,8 @@ import { useChangeCase } from "@vueuse/integrations/useChangeCase";
 const router = useRouter();
 const route = useRoute();
 
+const routeTitle = computed(() => route.meta.title as string);
+
 const goBack = () => {
   if ("/projects" !== route.fullPath) {
     router.push("/projects");
@@ -12,7 +14,7 @@ const goBack = () => {
   }
 };
 
-const rawTitle = computed(() => (route.meta.title as string) ?? "Projects");
+const rawTitle = computed(() => routeTitle.value ?? "Projects");
 const titleCaseTitle = useChangeCase(rawTitle, "pascalCase");
 const upperTitle = useChangeCase(rawTitle, "capitalCase");
 </script>

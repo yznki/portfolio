@@ -1,7 +1,5 @@
 <script setup lang="ts">
-definePageMeta({
-  title: "Home",
-});
+useHead({ title: "Home" });
 </script>
 
 <template>
