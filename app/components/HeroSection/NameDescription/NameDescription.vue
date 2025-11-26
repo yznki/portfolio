@@ -13,10 +13,12 @@ function sendEmail() {
 
 <template>
   <div class="flex flex-col items-center md:items-start">
-    <h1 class="text-5xl font-bold leading-snug text-text-color">
+    <h1 class="text-5xl font-bold leading-snug text-text-color text-center md:text-left">
       Yazan <span class="whitespace-nowrap">Al-Kiswani</span>
     </h1>
-    <span class="mb-12 pl-1 text-3xl text-text-color md:mb-2">I am a <TypeWriter /></span>
+    <span class="mb-12 pl-1 text-3xl text-text-color md:mb-2 text-center md:text-left"
+      >I am a <TypeWriter
+    /></span>
     <span class="mb-4 hidden pl-1 text-text-color md:block"
       >Turning code into cool, functional experiences (with a bit of magic and
       <span class="font-bold italic">redbull</span>, of course).</span
