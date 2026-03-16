@@ -10,7 +10,7 @@ export interface VerticalSeparatorProps {
 
 const { size } = defineProps<VerticalSeparatorProps>();
 
-const separatorStyling = cva("inline-block min-h-[1em] w-0.5 self-stretch bg-[#CACACA]", {
+const separatorStyling = cva("inline-block min-h-[1em] w-0.5 self-stretch bg-white/[0.08]", {
   variants: {
     size: {
       small: "h-2 md:ml-2",

@@ -3,4 +3,6 @@ definePageMeta({ layout: "projects", title: "Sehaty" });
 useHead({ title: "Sehaty" });
 </script>
 
-<template></template>
+<template>
+  <CaseStudyPage project-id="sehaty" />
+</template>
