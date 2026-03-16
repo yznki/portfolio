@@ -18,8 +18,6 @@ function scrollToTop() {
         </div>
 
         <div class="flex items-center gap-4">
-          <span class="text-xs text-white/15 hidden md:block">Built with Nuxt</span>
-
           <button
             class="text-xs text-white/25 hover:text-white/60 transition-colors duration-200 flex items-center gap-1 cursor-pointer"
             @click="scrollToTop"

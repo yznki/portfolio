@@ -1,8 +1,18 @@
 <script setup lang="ts">
 const scrolled = ref(false);
+const route = useRoute();
 
 function onScroll() {
   scrolled.value = window.scrollY > 40;
+}
+
+function handleAnchorClick(e: MouseEvent, href: string) {
+  if (!href.startsWith("/#")) return;
+  const id = href.slice(2);
+  if (route.path === "/") {
+    e.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  }
 }
 
 onMounted(() => {
@@ -34,12 +44,14 @@ onUnmounted(() => {
         <a
           href="/#experience"
           class="text-white/45 hover:text-white transition-colors duration-200"
+          @click="handleAnchorClick($event, '/#experience')"
         >
           Experience
         </a>
         <a
           href="/#skills"
           class="text-white/45 hover:text-white transition-colors duration-200"
+          @click="handleAnchorClick($event, '/#skills')"
         >
           Skills
         </a>
@@ -52,6 +64,7 @@ onUnmounted(() => {
         <a
           href="/#contact"
           class="text-white/45 hover:text-white transition-colors duration-200"
+          @click="handleAnchorClick($event, '/#contact')"
         >
           Contact
         </a>

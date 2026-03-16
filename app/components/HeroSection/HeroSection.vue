@@ -150,18 +150,12 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Stats strip -->
+    <!-- Location strip -->
     <div class="border-t border-white/[0.06]">
       <div
         class="mx-auto max-w-6xl px-6 lg:px-10 py-4 flex flex-wrap items-center gap-3 md:gap-5"
       >
-        <span class="text-xs text-white/20 font-medium">5 Projects</span>
-        <span class="text-white/10 text-xs">·</span>
-        <span class="text-xs text-white/20 font-medium">3 Years Experience</span>
-        <span class="text-white/10 text-xs">·</span>
         <span class="text-xs text-white/20 font-medium">Villach, Austria</span>
-        <span class="text-white/10 text-xs">·</span>
-        <span class="text-xs text-white/20 font-medium">React Native · Vue · React</span>
       </div>
     </div>
   </main>

@@ -1,14 +1,18 @@
 @config "../../../tailwind.config.ts";
 @import "tailwindcss";
 
-body,
-html {
+html,
+body {
   margin: 0;
   padding: 0;
+}
+html {
   overflow-x: hidden;
+  overflow-y: scroll; /* always reserve scrollbar column — prevents layout shift on navigation */
 }
 body {
-  @apply overflow-y-auto bg-background;
+  overflow-x: hidden;
+  @apply bg-background;
 }
 
 ::-webkit-scrollbar {

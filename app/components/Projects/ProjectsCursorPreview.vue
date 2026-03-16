@@ -82,10 +82,11 @@ watch(
     }"
   >
     <!-- Real image -->
-    <img
+    <NuxtImg
       v-if="imgSrc && !imgErrored"
       :src="imgSrc"
       :alt="project?.title"
+      draggable="false"
       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
       :class="imgLoaded ? 'opacity-100' : 'opacity-0'"
       @load="imgLoaded = true"

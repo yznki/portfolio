@@ -6,8 +6,22 @@ defineProps<{
 const visible = ref(false);
 const activeId = ref("");
 
+let sectionEls: HTMLElement[] = [];
+
+// Find the deepest section whose top has crossed 40% down the viewport.
+// This means a section stays active for its entire height — no gaps.
+function updateActive() {
+  if (!sectionEls.length) return;
+  const threshold = window.scrollY + window.innerHeight * 0.4;
+  let current = sectionEls[0]!.id;
+  for (const el of sectionEls) {
+    if (el.offsetTop <= threshold) current = el.id;
+  }
+  activeId.value = current;
+}
+
 onMounted(() => {
-  // Show nav after hero scrolled past
+  // Show nav after hero scrolls out of view
   const hero = document.getElementById("cs-hero");
   if (hero) {
     const heroObserver = new IntersectionObserver(
@@ -19,21 +33,16 @@ onMounted(() => {
     heroObserver.observe(hero);
   }
 
-  // Track active section
-  const sectionEls = document.querySelectorAll<HTMLElement>("[data-cs-section]");
+  // Track active section via scroll — always has a winner
+  sectionEls = Array.from(document.querySelectorAll<HTMLElement>("[data-cs-section]"));
   if (sectionEls.length) {
-    const activeObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            activeId.value = entry.target.id;
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -50% 0px" }
-    );
-    sectionEls.forEach((el) => activeObserver.observe(el));
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
   }
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", updateActive);
 });
 
 function scrollTo(id: string) {

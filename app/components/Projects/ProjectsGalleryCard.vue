@@ -80,9 +80,10 @@ const typeBadge = computed(() => {
     <!-- Image / placeholder area -->
     <div class="relative overflow-hidden aspect-[4/3]">
       <!-- Hero image -->
-      <img
+      <NuxtImg
         :src="`/project-media/${project.id}/hero.png`"
         :alt="project.title"
+        draggable="false"
         class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         :class="imgLoaded && !imgErrored ? 'opacity-100' : 'opacity-0'"
         @load="imgLoaded = true"

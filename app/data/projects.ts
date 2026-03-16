@@ -203,7 +203,7 @@ export function renderSection(type: SectionType, data: unknown) {
     status: "design_complete",
     year: "2024",
     liveUrl: null,
-    githubUrls: [],
+    githubUrls: ["https://github.com/zaraa-app/zaraa-client"],
     figmaUrl: "https://www.figma.com/design/wonqHG2HA22bJkWKJykCmB/Zaraa",
     description:
       "A gamified mobile app for plant lovers to track, care for, and grow their collections — with cute illustrated plant companions, care reminders, growth tracking, and community leaderboards.",

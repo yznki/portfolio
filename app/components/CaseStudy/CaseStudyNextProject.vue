@@ -54,9 +54,10 @@ const imgErrored = ref(false);
       @mouseleave="hover = false"
     >
       <!-- Hero image -->
-      <img
+      <NuxtImg
         :src="`/project-media/${next.id}/hero.png`"
         :alt="next.title"
+        draggable="false"
         class="absolute inset-0 w-full h-full object-cover transition-[opacity,transform] duration-700"
         :class="
           imgLoaded && !imgErrored

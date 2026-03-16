@@ -62,10 +62,11 @@ onMounted(() => {
     style="min-height: 72vh"
   >
     <!-- Hero image -->
-    <img
+    <NuxtImg
       v-if="mounted"
       :src="heroSrc"
       :alt="`${project.title} hero`"
+      draggable="false"
       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
       :class="heroLoaded && !heroErrored ? 'opacity-100' : 'opacity-0'"
       @load="heroLoaded = true"

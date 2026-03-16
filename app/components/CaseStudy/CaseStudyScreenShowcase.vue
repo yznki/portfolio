@@ -12,14 +12,18 @@ const props = defineProps<{
   aspect?: "screen" | "wide" | "square" | "auto";
 }>();
 
+const { openLightbox } = useLightbox();
+
 const stripEl = ref<HTMLElement | null>(null);
 let isDragging = false;
 let startX = 0;
 let scrollLeft = 0;
+let dragMoved = false;
 
 function onMouseDown(e: MouseEvent) {
   if (!stripEl.value) return;
   isDragging = true;
+  dragMoved = false;
   startX = e.pageX - stripEl.value.offsetLeft;
   scrollLeft = stripEl.value.scrollLeft;
   stripEl.value.style.cursor = "grabbing";
@@ -30,6 +34,7 @@ function onMouseMove(e: MouseEvent) {
   e.preventDefault();
   const x = e.pageX - stripEl.value.offsetLeft;
   const walk = (x - startX) * 1.2;
+  if (Math.abs(walk) > 4) dragMoved = true;
   stripEl.value.scrollLeft = scrollLeft - walk;
 }
 
@@ -38,10 +43,17 @@ function onMouseUp() {
   if (stripEl.value) stripEl.value.style.cursor = "grab";
 }
 
+function openImage(index: number) {
+  if (dragMoved) return;
+  openLightbox(
+    props.images.map((img) => ({ src: img.src, alt: img.alt, caption: img.caption })),
+    index
+  );
+}
+
 const displayType = computed(() => props.type ?? "grid");
 const displayAspect = computed(() => props.aspect ?? "auto");
 
-// Grid columns: 2 on mobile for screens, 3 for wide/landscape
 const gridCols = computed(() => {
   if (displayAspect.value === "screen") return "grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
   return "grid-cols-1 md:grid-cols-2";
@@ -63,15 +75,16 @@ const gridCols = computed(() => {
       <div
         v-for="(img, i) in images"
         :key="i"
-        class="snap-start flex-shrink-0 flex flex-col gap-2"
+        class="snap-start flex-shrink-0 flex flex-col gap-2 group/item cursor-pointer"
         :class="displayAspect === 'screen' ? 'w-[200px] md:w-[240px]' : 'w-[320px] md:w-[400px]'"
+        @click="openImage(i)"
       >
         <CaseStudyImageSlot
           :src="img.src"
           :alt="img.alt"
           :label="img.label"
           :aspect="displayAspect === 'auto' ? undefined : displayAspect"
-          class="hover:scale-[1.02] transition-transform duration-300"
+          class="group-hover/item:scale-[1.02] transition-transform duration-300 pointer-events-none"
         />
         <p v-if="img.caption" class="text-[11px] text-white/40 text-center leading-snug px-1">
           {{ img.caption }}
@@ -89,26 +102,35 @@ const gridCols = computed(() => {
 
   <!-- GRID -->
   <div v-else-if="displayType === 'grid'" class="grid gap-4" :class="gridCols">
-    <div v-for="(img, i) in images" :key="i" class="flex flex-col gap-2">
+    <div
+      v-for="(img, i) in images"
+      :key="i"
+      class="flex flex-col gap-2 cursor-pointer group/item"
+      @click="openImage(i)"
+    >
       <CaseStudyImageSlot
         :src="img.src"
         :alt="img.alt"
         :label="img.label"
         :aspect="displayAspect === 'auto' ? undefined : displayAspect"
-        class="hover:scale-[1.01] transition-transform duration-300"
+        class="group-hover/item:scale-[1.01] transition-transform duration-300 pointer-events-none"
       />
       <p v-if="img.caption" class="text-[11px] text-white/40 text-center">{{ img.caption }}</p>
     </div>
   </div>
 
   <!-- SHOWCASE (single large featured image) -->
-  <div v-else-if="displayType === 'showcase' && images.length > 0 && images[0]" class="flex flex-col gap-2">
+  <div
+    v-else-if="displayType === 'showcase' && images.length > 0 && images[0]"
+    class="flex flex-col gap-2 cursor-pointer group/item"
+    @click="openImage(0)"
+  >
     <CaseStudyImageSlot
       :src="images[0].src"
       :alt="images[0].alt"
       :label="images[0].label"
       :aspect="displayAspect === 'auto' ? 'wide' : displayAspect"
-      class="w-full"
+      class="w-full pointer-events-none"
     />
     <p v-if="images[0].caption" class="text-xs text-white/40 text-center mt-1">
       {{ images[0].caption }}

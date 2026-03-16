@@ -10,6 +10,8 @@ const props = defineProps<{
 const loaded = ref(false);
 const errored = ref(false);
 
+const { openLightbox } = useLightbox();
+
 // Placeholder gradients keyed by partial path
 const placeholderGradient = computed(() => {
   if (props.src.includes("optionqaaf"))
@@ -45,14 +47,25 @@ const slotName = computed(() => {
   const parts = props.src.split("/");
   return parts[parts.length - 1] ?? props.src;
 });
+
+function handleClick() {
+  if (loaded.value && !errored.value) {
+    openLightbox([{ src: props.src, alt: props.alt, caption: props.label }]);
+  }
+}
 </script>
 
 <template>
-  <div class="relative overflow-hidden rounded-xl" :class="[aspectClass, props.class]">
+  <div
+    class="relative overflow-hidden rounded-xl cursor-pointer"
+    :class="[aspectClass, props.class]"
+    @click="handleClick"
+  >
     <!-- Always render the img so it can trigger load/error -->
-    <img
+    <NuxtImg
       :src="src"
       :alt="alt ?? label ?? src"
+      draggable="false"
       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
       :class="loaded && !errored ? 'opacity-100' : 'opacity-0'"
       @load="loaded = true"
